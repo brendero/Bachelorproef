@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const passport = require('passport');
 
 const app = express();
+
+// Get routes
+const hazards = require('./routes/api/hazards');
 
 app.use(bodyParser.json());
 
@@ -13,9 +15,7 @@ mongoose.connect(db)
   .then(() => console.log('MongoDB connected')) 
   .catch(err => console.log(err));
 
-app.use(passport.initialize());
-
-require('./config/passport')(passport);
+app.use('/api/hazards', hazards);
 
 const port = process.env.PORT || 5000;
 
