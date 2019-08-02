@@ -9,15 +9,14 @@ const HazardSchema = new Schema({
   },
   location: {
     type: {
-      type: String,
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
       required: true
     },
-    coordinates: [
-      // Longitude first (between -180 and 180)
-      Number,
-      // Latitude secondly (between -90 and 90)
-      Number
-     ]
+    coordinates: {
+      type: [Number],
+      required: true
+    }
   },
   createdAt: {
     type: Date,

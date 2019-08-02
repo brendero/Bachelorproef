@@ -1,15 +1,61 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, Modal, TouchableOpacity, Image } from 'react-native'
 import { width, height, colors } from '../config/styles'
+import axios from 'axios';
+import { MONGO_URL } from '../config/dbconfig';
 
 export default class ReportModal extends Component {
   state = {
-    modalVisible: false
+    modalVisible: false,
+    pinnedLocation: null
   }
   setModalVisible(visible) {
     this.setState({
       modalVisible: visible
     })
+  }
+  reportHazard(type) {
+    const { pinnedLocation, modalVisible } = this.state;
+
+    // TODO: make object for post request
+    const hazardData = {
+      type,
+      location: pinnedLocation
+    }
+    // TODO: use axios for post request to /hazard
+    axios
+      .post(`${MONGO_URL}/api/hazards`, hazardData)
+      .then(res => {
+        console.log(res)
+        this.setState({
+          pinnedLocation: null
+        })
+
+        this.setModalVisible(!modalVisible)
+      })
+      .catch(err => console.log(err))
+    // TODO: clearpinned location
+
+    // TODO: close modal
+  }
+  pinLocation() {
+    const { modalVisible } = this.state;
+    this.setModalVisible(!modalVisible)
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        this.setState({
+          pinnedLocation: {
+            type: "Point",
+            latitude,
+            longitude
+          }
+        })
+      },
+      (err) => console.log(err),
+      { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000}
+    )
   }
   render() {
     const { modalVisible } = this.state;
@@ -22,49 +68,49 @@ export default class ReportModal extends Component {
           >
           <View style={styles.modalWrapper}>
             <View style={styles.reportWrapper}>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('tram')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/tram.png')}/>
                 <Text style={styles.reportText}>Tram tracks</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('busystreet')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/busy-street.png')}/>
                 <Text style={styles.reportText}>Busy street</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('obstruction')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/obstruction.png')}/>
                 <Text style={styles.reportText}>Obstruction</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('badbikepath')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/bike-path.png')}/>
                 <Text style={styles.reportText}>Bad bike path</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('highcurb')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/curb.png')}/>
                 <Text style={styles.reportText}>High curb</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('intersection')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/intersection.png')}/>
                 <Text style={styles.reportText}>Dangerous intersection</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('badroad')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/bad-road.png')}/>
                 <Text style={styles.reportText}>Bad road</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.reportBtn}>
+              <TouchableOpacity style={styles.reportBtn} onPress={() => this.reportHazard('other')}>
                 <Image 
                   style={styles.reportIcon}
                   source={require('../assets/Report.png')}/>
@@ -80,7 +126,7 @@ export default class ReportModal extends Component {
             </TouchableOpacity>
           </View>
         </Modal>
-        <TouchableOpacity onPress={() => this.setModalVisible(!modalVisible)} style={styles.openBtn}>
+        <TouchableOpacity onPress={() => this.pinLocation()} style={styles.openBtn}>
           <Image source={require('../assets/Report.png')}/>
         </TouchableOpacity>
       </View>

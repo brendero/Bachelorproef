@@ -10,6 +10,7 @@ import * as Font from 'expo-font';
 import { API_KEY } from './config/keys';
 import { colors } from './config/styles';
 import axios from 'axios'
+import { MONGO_URL } from './config/dbconfig';
 
 export default class App extends Component {
   constructor(props) {
@@ -20,6 +21,7 @@ export default class App extends Component {
       markerLocation: null,
       activeRoute: null,
       endDestination: null,
+      hazardMarkers: [],
       watcherId: null
     }
 
@@ -43,7 +45,7 @@ export default class App extends Component {
   watchLocation() {
     const watcherId = navigator.geolocation.watchPosition(
       (position) => {
-        this.setMapLocation(position.coords.latitude, position.coords.longitude, 0.2)
+        this.setMapLocation(position.coords.latitude, position.coords.longitude, 0.1)
       },
       (err) => console.log(err),
       { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000}
@@ -82,13 +84,32 @@ export default class App extends Component {
                 longitude: parseFloat(endCoords.lng)
               }
             })
+
+            this.getPointsOnRoute(coords);
           })
           .catch(err => console.log(err))
       },
       (err) => console.log(err),
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-    );
-    
+    ); 
+  }
+  getPointsOnRoute(coords) {
+    for (let i = 0; i < coords.length; i = i+4) {
+      axios
+        .get(`${MONGO_URL}/api/hazards/search`, {
+          params: {
+            coordinates: coords[i]
+          }
+        })
+        .then(res => {
+          if(res.data.length !== 0) {
+            this.setState({
+              hazardMarkers: [...this.state.hazardMarkers, res.data]
+            })
+          }
+        })
+        .catch(err => console.log(err))
+    }
   }
   getGeoLocation() {
     const granted = Permissions.askAsync(Permissions.LOCATION)
@@ -114,7 +135,7 @@ export default class App extends Component {
     this.getGeoLocation();
   }
   render() {
-    const { userLocation, markerLocation, activeRoute, endDestination} = this.state;
+    const { userLocation, markerLocation, activeRoute, endDestination, hazardMarkers} = this.state;
     return (
       <View style={styles.container}>
         <MapView 
@@ -145,6 +166,23 @@ export default class App extends Component {
                 title="End destination"
                 coordinate={endDestination}
               />:
+              null
+          }
+          {
+            JSON.stringify(hazardMarkers) !== '[]' ?
+            hazardMarkers.map((hazard, index) => {
+              const source = `./assets/${hazard[0].type}-marker.png`;
+
+              return (
+                
+                <MapView.Marker 
+                key={index}
+                title={hazard[0].type}
+                image={require(source)}
+                coordinate={{ latitude: hazard[0].location.coordinates[1], longitude: hazard[0].location.coordinates[0] }}
+                />
+                )
+            }) :
               null
           }
         </MapView>

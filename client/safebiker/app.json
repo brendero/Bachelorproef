@@ -25,6 +25,7 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "Community driven react-native application to improve the safety of bikers."
   }
 }
