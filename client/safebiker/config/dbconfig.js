@@ -1,1 +1,1 @@
-export const MONGO_URL = "http://192.168.1.41:5000";
+export const MONGO_URL = "https://whispering-inlet-59140.herokuapp.com";

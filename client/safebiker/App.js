@@ -11,6 +11,8 @@ import { API_KEY } from './config/keys';
 import { colors } from './config/styles';
 import axios from 'axios'
 import { MONGO_URL } from './config/dbconfig';
+import * as turf from '@turf/turf';
+import AlertModal from './components/AlertModal';
 
 export default class App extends Component {
   constructor(props) {
@@ -22,7 +24,9 @@ export default class App extends Component {
       activeRoute: null,
       endDestination: null,
       hazardMarkers: [],
-      watcherId: null
+      watcherId: null,
+      alertVisible: false,
+      nearbyHazard: null
     }
 
     this.getGeoLocation = this.getGeoLocation.bind(this)
@@ -46,6 +50,25 @@ export default class App extends Component {
     const watcherId = navigator.geolocation.watchPosition(
       (position) => {
         this.setMapLocation(position.coords.latitude, position.coords.longitude, 0.1)
+
+        const currentLocation = turf.point([position.coords.longitude, position.coords.latitude])
+        
+        this.state.hazardMarkers.map((hazard, index) => {
+          const circle = turf.circle([hazard[0].location.coordinates[0], hazard[0].location.coordinates[1]],60,{steps: 10, units: 'meters'})
+          if(turf.booleanContains(circle, currentLocation) === true) {
+            // TODO: Open Modal with data of hazard
+            this.setState({
+              nearbyHazard: hazard,
+              alertVisible: true
+            })
+
+            setTimeout(() => {
+              this.setState({
+                alertVisible: false
+              })
+            }, 5000);
+          }
+        })
       },
       (err) => console.log(err),
       { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000}
@@ -56,6 +79,12 @@ export default class App extends Component {
   }
   stopLocationWatch() {
     navigator.geolocation.clearWatch(this.state.watcherId);
+
+    this.setState({
+      activeRoute: null,
+      endDestination: null,
+      hazardMarkers: []
+    })
   }
   async getRoute(destination) {
     navigator.geolocation.getCurrentPosition(
@@ -171,17 +200,45 @@ export default class App extends Component {
           {
             JSON.stringify(hazardMarkers) !== '[]' ?
             hazardMarkers.map((hazard, index) => {
-              const source = `./assets/${hazard[0].type}-marker.png`;
+              let source;
+              switch(hazard[0].type) {
+                case 'tram':
+                  source = require('./assets/tram-marker.png')
+                  break;
+                case 'busystreet':
+                  source = require('./assets/busystreet-marker.png')
+                  break;
+                case 'obstruction':
+                  source = require('./assets/obstruction-marker.png')
+                  break;
+                case 'badbikepath':
+                  source = require('./assets/badbikepath-marker.png')
+                  break;
+                case 'highcurb':
+                  source = require('./assets/highcurb-marker.png')
+                  break;
+                case 'intersection':
+                  source = require('./assets/intersection-marker.png') 
+                  break;
+                case 'badroad':
+                  source = require('./assets/badroad-marker.png')
+                  break;
+                case 'other':
+                  source = require('./assets/other-marker.png')   
+                  break;               
+                default:
+                  source = require('./assets/other-marker.png')    
+                  break;              
+              }
 
               return (
-                
                 <MapView.Marker 
                 key={index}
                 title={hazard[0].type}
-                image={require(source)}
+                image={source}
                 coordinate={{ latitude: hazard[0].location.coordinates[1], longitude: hazard[0].location.coordinates[0] }}
                 />
-                )
+              )
             }) :
               null
           }
@@ -192,6 +249,11 @@ export default class App extends Component {
           <Searchbar onPress={value => this.getRoute(value)}/>
         }
         <ReportModal/>
+        {
+          this.state.alertVisible ?
+          <AlertModal hazard={this.state.nearbyHazard} modalVisible={this.state.alertVisible}/> : 
+          null
+        }
       </View>
     );
   }
