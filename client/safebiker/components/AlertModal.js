@@ -5,7 +5,6 @@ import { height } from '../config/styles';
 export default class AlertModal extends Component {
   renderImage(type) {
       let source;
-      console.log(type);
       switch(type) {
         case 'tram':
           source = require('../assets/tram-marker.png')
@@ -55,7 +54,6 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "white",
     padding: 30,
-    height: height / 5,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",

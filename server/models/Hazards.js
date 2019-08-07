@@ -18,6 +18,11 @@ const HazardSchema = new Schema({
       required: true
     }
   },
+  scrore: {
+    type: Number,
+    required: true,
+    default: 10
+  },
   createdAt: {
     type: Date,
     required: true,

@@ -9,7 +9,7 @@ export default class Searchbar extends Component {
     super(props);
 
     this.state = {
-      searchQuery: 'Stevenson Park, Mountain View'
+      searchQuery: ''
     }
   }
   render() {

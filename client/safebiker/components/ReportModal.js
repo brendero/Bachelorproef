@@ -17,16 +17,15 @@ export default class ReportModal extends Component {
   reportHazard(type) {
     const { pinnedLocation, modalVisible } = this.state;
 
-    // TODO: make object for post request
+    // make object for post request
     const hazardData = {
       type,
       location: pinnedLocation
     }
-    // TODO: use axios for post request to /hazard
+    // use axios for post request to /hazard
     axios
       .post(`${MONGO_URL}/api/hazards`, hazardData)
       .then(res => {
-        console.log(res)
         this.setState({
           pinnedLocation: null
         })
@@ -34,9 +33,6 @@ export default class ReportModal extends Component {
         this.setModalVisible(!modalVisible)
       })
       .catch(err => console.log(err))
-    // TODO: clearpinned location
-
-    // TODO: close modal
   }
   pinLocation() {
     const { modalVisible } = this.state;
@@ -54,7 +50,7 @@ export default class ReportModal extends Component {
         })
       },
       (err) => console.log(err),
-      { enableHighAccuracy: true, timeout: 2000, maximumAge: 1000}
+      { enableHighAccuracy: true, timeout: 2000, maximumAge: 0}
     )
   }
   render() {

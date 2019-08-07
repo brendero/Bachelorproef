@@ -32,14 +32,22 @@ export default class App extends Component {
     this.getGeoLocation = this.getGeoLocation.bind(this)
     this.setMapLocation = this.setMapLocation.bind(this)
   }
-  setMapLocation(lat, lon, zoom) {
-    this.setState({
-      userLocation: {
+  setMapLocation(lat, lon, zoom, heading, altitude) {
+    const camera = {
+      center: {
         latitude: parseFloat(lat),
         longitude: parseFloat(lon),
-        latitudeDelta: 0.0922 * zoom,
-        longitudeDelta: 0.0421 * zoom
       },
+      altitude,
+      heading,
+      pitch: 1,
+      zoom
+    };
+
+    this.map.animateCamera(camera)
+    
+    this.setState({
+      userLocation: camera,
       markerLocation: {
         latitude: parseFloat(lat),
         longitude: parseFloat(lon)
@@ -49,7 +57,8 @@ export default class App extends Component {
   watchLocation() {
     const watcherId = navigator.geolocation.watchPosition(
       (position) => {
-        this.setMapLocation(position.coords.latitude, position.coords.longitude, 0.1)
+        const { latitude, longitude, heading, altitude } = position.coords;
+        this.setMapLocation(latitude, longitude, 18, heading, altitude)
 
         const currentLocation = turf.point([position.coords.longitude, position.coords.latitude])
         
@@ -89,7 +98,10 @@ export default class App extends Component {
   async getRoute(destination) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        this.setMapLocation(position.coords.latitude, position.coords.longitude, 1)
+        
+        const { latitude, longitude, heading, altitude } = position.coords;
+        this.setMapLocation(latitude, longitude, 14, heading, altitude)
+
         const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${position.coords.latitude},${position.coords.longitude}&destination=${destination}&mode=bicycling&key=${API_KEY}`
 
         axios
@@ -147,7 +159,8 @@ export default class App extends Component {
       if(res.status === 'granted') {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            this.setMapLocation(position.coords.latitude, position.coords.longitude, 0.2)
+            const { latitude, longitude, heading, altitude } = position.coords;
+            this.setMapLocation(latitude, longitude, 15, heading, altitude)
           },
           (err) => console.log(err),
           { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
@@ -168,15 +181,17 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <MapView 
+          ref={ref => this.map = ref}
           style={{flex: 1}}
-          initialRegion={userLocation}
-          region={userLocation}
+          initialCamera={userLocation}
+          showsUserLocation={true}
+          followsUserLocation={true}
           >
           {
             markerLocation ? 
             <MapView.Marker
             coordinate={markerLocation}
-            image={require('./assets/Marker.png')}
+            icon={require('./assets/Marker.png')}
             /> : 
             null
           }

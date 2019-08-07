@@ -36,7 +36,7 @@ example:
 ```json
 coordinates: {
 	"latitude": 37.40299,
-	"longitude"; -122.08464
+	"longitude": -122.08464
 }
 ```
 
