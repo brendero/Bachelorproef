@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import MapView from 'react-native-maps';
+import { StyleSheet, View } from 'react-native';
+import MapView, { Callout }from 'react-native-maps';
+import { API_KEY } from './config/keys';
+import { colors } from './config/styles';
+import { MONGO_URL } from './config/dbconfig';
 import Polyline from '@mapbox/polyline';
 import * as Permissions from 'expo-permissions';
+import * as turf from '@turf/turf';
+import axios from 'axios';
 import Searchbar from './components/Searchbar';
 import ReportModal from './components/ReportModal';
 import GpsButton from './components/GpsButton';
-import * as Font from 'expo-font';
-import { API_KEY } from './config/keys';
-import { colors } from './config/styles';
-import axios from 'axios'
-import { MONGO_URL } from './config/dbconfig';
-import * as turf from '@turf/turf';
 import AlertModal from './components/AlertModal';
+import CustomCallout from './components/CustomCallout';
 
 export default class App extends Component {
   constructor(props) {
@@ -26,7 +26,9 @@ export default class App extends Component {
       hazardMarkers: [],
       watcherId: null,
       alertVisible: false,
-      nearbyHazard: null
+      nearbyHazard: null,
+      calloutVisible: false,
+      selectedHazard: null
     }
 
     this.getGeoLocation = this.getGeoLocation.bind(this)
@@ -173,11 +175,33 @@ export default class App extends Component {
     )
     .catch(err => console.log(err))
   }
+  openCallout(hazard) {
+    this.setState({
+      selectedHazard: hazard,
+      calloutVisible: true
+    })
+  }
+  closeCallout() {
+    this.setState({
+      calloutVisible: false,
+      selectedHazard: null
+    })
+  }
   async componentDidMount() {
     this.getGeoLocation();
   }
   render() {
-    const { userLocation, markerLocation, activeRoute, endDestination, hazardMarkers} = this.state;
+    const { 
+      userLocation,
+      markerLocation,
+      activeRoute,
+      endDestination,
+      hazardMarkers,
+      nearbyHazard,
+      alertVisible,
+      calloutVisible,
+      selectedHazard
+    } = this.state;
     return (
       <View style={styles.container}>
         <MapView 
@@ -186,6 +210,7 @@ export default class App extends Component {
           initialCamera={userLocation}
           showsUserLocation={true}
           followsUserLocation={true}
+          showsCompass={false}
           >
           {
             markerLocation ? 
@@ -245,17 +270,16 @@ export default class App extends Component {
                   source = require('./assets/other-marker.png')    
                   break;              
               }
-
               return (
                 <MapView.Marker 
                 key={index}
-                title={hazard[0].type}
                 image={source}
                 coordinate={{ latitude: hazard[0].location.coordinates[1], longitude: hazard[0].location.coordinates[0] }}
+                onPress={() => this.openCallout(hazard)}
                 />
               )
             }) :
-              null
+            null
           }
         </MapView>
         {
@@ -265,9 +289,14 @@ export default class App extends Component {
         }
         <ReportModal/>
         {
-          this.state.alertVisible ?
-          <AlertModal hazard={this.state.nearbyHazard} modalVisible={this.state.alertVisible}/> : 
+          alertVisible ?
+            <AlertModal hazard={nearbyHazard} modalVisible={alertVisible}/> : 
           null
+        }
+        {
+          selectedHazard ?
+            <CustomCallout closeModal={() => this.closeCallout()} visible={calloutVisible} hazard={selectedHazard}/>:
+            null
         }
       </View>
     );

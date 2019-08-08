@@ -18,7 +18,7 @@ const HazardSchema = new Schema({
       required: true
     }
   },
-  scrore: {
+  score: {
     type: Number,
     required: true,
     default: 10

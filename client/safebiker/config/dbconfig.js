@@ -1,1 +1,1 @@
-export const MONGO_URL = "https://whispering-inlet-59140.herokuapp.com";
+export const MONGO_URL = "https://safelane.herokuapp.com";

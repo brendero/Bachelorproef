@@ -41,4 +41,28 @@ router.post('/', (req, res) => {
     .catch(err => res.json(err))
 })
 
+router.post('/report/:id', (req, res) => {
+  Hazard.findById(req.params.id)
+    .then(hazard => {
+      if(hazard) {
+        Hazard.findByIdAndUpdate(hazard.id, {score: (hazard.score -1)}, {new: true})
+          .then(hazardData => res.json(hazardData))
+          .catch(err => res.status(404).json({success: false}))
+      }
+    })
+    .catch(err => res.json(err))
+})
+
+router.post('/support/:id', (req, res) => {
+  Hazard.findById(req.params.id)
+    .then(hazard => {
+      if(hazard) {
+        Hazard.findByIdAndUpdate(hazard.id, {score: (hazard.score + 1)}, {new: true})
+          .then(hazardData => res.json(hazardData))
+          .catch(err => res.status(404).json({success: false}))
+      }
+    })
+    .catch(err => res.json(err))
+})
+
 module.exports = router;
