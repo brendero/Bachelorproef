@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Vibration } from 'react-native';
 import MapView, { Callout }from 'react-native-maps';
 import { API_KEY } from './config/keys';
 import { colors } from './config/styles';
@@ -72,7 +72,7 @@ export default class App extends Component {
               nearbyHazard: hazard,
               alertVisible: true
             })
-
+            Vibration.vibrate(1000)
             setTimeout(() => {
               this.setState({
                 alertVisible: false
