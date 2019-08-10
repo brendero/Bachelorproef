@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontWeight: "bold",
-    fontSize: 20
+    fontSize: 20,
+    fontFamily: 'roboto'
   }
 })

@@ -9,7 +9,7 @@ export default class Searchbar extends Component {
     super(props);
 
     this.state = {
-      searchQuery: 'Tramstraat 3 Hamme'
+      searchQuery: ''
     }
   }
   render() {
@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
   searchForm: {
     padding: 10,
     margin: 0,
-    width: '90%'
+    width: '90%',
+    fontFamily: 'roboto'
   },
   routeBtn: {
     marginTop: 10,
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
   routeBtnText: {
     color: 'white',
     width: '90%',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    fontFamily: 'roboto'
   }
 })

@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Modal, TouchableOpacity, Image } from 'react-na
 import { width, height, colors } from '../config/styles'
 import axios from 'axios';
 import { MONGO_URL } from '../config/dbconfig';
+import * as Location from 'expo-location';
 
 export default class ReportModal extends Component {
   state = {
@@ -34,13 +35,15 @@ export default class ReportModal extends Component {
       })
       .catch(err => console.log(err))
   }
-  pinLocation() {
+  async pinLocation() {
     const { modalVisible } = this.state;
     this.setModalVisible(!modalVisible)
+    
+    await Location.getCurrentPositionAsync({accuracy: 6,maximumAge: 0})
+      .then(position => {
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
         const { latitude, longitude } = position.coords;
+        
         this.setState({
           pinnedLocation: {
             type: "Point",
@@ -48,10 +51,8 @@ export default class ReportModal extends Component {
             longitude
           }
         })
-      },
-      (err) => console.log(err),
-      { enableHighAccuracy: true, timeout: 2000, maximumAge: 0}
-    )
+      })
+      .catch(err => console.log(err))
   }
   render() {
     const { modalVisible } = this.state;

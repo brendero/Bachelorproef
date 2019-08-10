@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
   goBtnText: {
     color: 'white',
     width: '90%',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    fontFamily: 'roboto'
   },
   stopBtn: {
     backgroundColor: colors.secondary,
