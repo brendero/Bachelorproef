@@ -301,7 +301,7 @@ export default class HomeScreen extends Component {
           {
             endDestination ?
               <MapView.Marker
-                title="End destination"
+                icon={require('../assets/enddestination-marker.png')}
                 coordinate={endDestination}
               />:
               null
