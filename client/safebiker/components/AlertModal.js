@@ -4,7 +4,9 @@ import { height } from '../config/styles';
 
 export default class AlertModal extends Component {
   renderImage(type) {
+      // initialize source variable
       let source;
+      // use switch to return right image based on type
       switch(type) {
         case 'tram':
           source = require('../assets/tram-marker.png')
@@ -39,7 +41,7 @@ export default class AlertModal extends Component {
     const { type } = this.props.hazard[0];
     return (
       <View style={[styles.modalWrapper, this.props.modalVisible ? '' : styles.modalInvisible]}>
-        <Text style={{color: 'lightgrey', alignSelf: 'flex-start', fontSize: 18}}>60m</Text>
+        <Text style={styles.distanceText}>60m</Text>
         {this.renderImage(type)}
         <Text style={styles.modalText}>{ type }</Text>
       </View>
@@ -71,6 +73,12 @@ const styles = StyleSheet.create({
   modalText: {
     fontWeight: "bold",
     fontSize: 20,
+    fontFamily: 'roboto'
+  },
+  distanceText: {
+    color: 'lightgrey',
+    alignSelf: 'flex-start',
+    fontSize: 18,
     fontFamily: 'roboto'
   }
 })

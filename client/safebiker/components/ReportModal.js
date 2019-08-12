@@ -36,14 +36,18 @@ export default class ReportModal extends Component {
       .catch(err => console.log(err))
   }
   async pinLocation() {
+    // get modalvisible state
     const { modalVisible } = this.state;
+    //set modalvisible 
     this.setModalVisible(!modalVisible)
     
+    // get current position
     await Location.getCurrentPositionAsync({accuracy: 6,maximumAge: 0})
       .then(position => {
-
+        // get location info from response using destructuring
         const { latitude, longitude } = position.coords;
         
+        // set pinnedLocation to GEOJson object using latitutde and longitude
         this.setState({
           pinnedLocation: {
             type: "Point",
@@ -168,5 +172,6 @@ const styles = StyleSheet.create({
   },
   reportText: {
     marginTop: 10,
+    fontFamily: 'roboto'
   }
 })

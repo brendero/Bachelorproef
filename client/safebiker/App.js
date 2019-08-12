@@ -12,9 +12,11 @@ export default class App extends Component {
     }
   }
   async componentDidMount() {
+    // load in robotoFont
     await Font.loadAsync({
       'roboto': require('./assets/fonts/Roboto-Regular.ttf'),
     });
+    // setState to true to start rendering application
     this.setState({ fontLoaded: true });
   }
   render() {

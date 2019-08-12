@@ -41,6 +41,7 @@ router.post('/', (req, res) => {
     .catch(err => res.json(err))
 })
 
+// report hazard using id
 router.post('/report/:id', (req, res) => {
   Hazard.findById(req.params.id)
     .then(hazard => {
@@ -53,6 +54,7 @@ router.post('/report/:id', (req, res) => {
     .catch(err => res.json(err))
 })
 
+// Support hazard using id
 router.post('/support/:id', (req, res) => {
   Hazard.findById(req.params.id)
     .then(hazard => {

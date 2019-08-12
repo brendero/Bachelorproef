@@ -13,16 +13,19 @@ export default class GpsButton extends Component {
     this.toggleGps = this.toggleGps.bind(this);
   }
   toggleGps() {
+    // check to see if gps is started
     if(this.state.locationWatching === false) {
       this.setState({
         locationWatching: true
       })
+      // start locationWatch using props 
       this.props.startGps();
     }
     if(this.state.locationWatching === true) {
       this.setState({
         locationWatching: false
       })
+      // stop locationWatch using props
       this.props.stopGps();
     }
   }

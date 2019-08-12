@@ -12,26 +12,30 @@ export default class CustomCallout extends Component {
     this.reportHazard = this.reportHazard.bind(this);
   }
   reportHazard() {
+    // report hazard using id given by props
     axios
       .post(`${MONGO_URL}/api/hazards/report/${this.props.hazard[0]._id}`)
       .then(res => this.props.closeModal())
       .catch(err => this.props.closeModal())
   }
   supportHazard() {
+    // support Hazard using id given by props
     axios
       .post(`${MONGO_URL}/api/hazards/support/${this.props.hazard[0]._id}`)
       .then(res => this.props.closeModal())
       .catch(err => this.props.closeModal())
   }
   renderHeader(type) {
+    // initialize source variable
     let source;
+    // use switch case to render header based on type
     switch(type) {
       case 'tram':
         source = require('../assets/tram-marker.png')
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Tram Tracks</Text>
+            <Text style={styles.typeText}>Tram Tracks</Text>
           </View>
         )
       case 'busystreet':
@@ -39,7 +43,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Busy Street</Text>  
+            <Text style={styles.typeText}>Busy Street</Text>  
           </View>
         )
       case 'obstruction':
@@ -47,7 +51,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Obstruction</Text>  
+            <Text style={styles.typeText}>Obstruction</Text>  
           </View> 
         )
       case 'badbikepath':
@@ -55,7 +59,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Bad Bike Path</Text>  
+            <Text style={styles.typeText}>Bad Bike Path</Text>  
           </View>
         )
       case 'highcurb':
@@ -63,7 +67,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>High Curb</Text>  
+            <Text style={styles.typeText}>High Curb</Text>  
           </View>
         )
       case 'intersection':
@@ -71,7 +75,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Intersection</Text>
+            <Text style={styles.typeText}>Intersection</Text>
           </View>
         )
       case 'badroad':
@@ -79,7 +83,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Bad Road</Text>
+            <Text style={styles.typeText}>Bad Road</Text>
           </View>
         )
       case 'other':
@@ -87,7 +91,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Unnamed Danger</Text>
+            <Text style={styles.typeText}>Unnamed Danger</Text>
           </View>
         )
       default:
@@ -95,7 +99,7 @@ export default class CustomCallout extends Component {
         return (
           <View style={styles.descriptionWrapper}>
             <Image source={source} style={styles.headerImage}/>
-            <Text style={{fontWeight: "bold"}}>Unnamed Danger</Text>
+            <Text style={styles.typeText}>Unnamed Danger</Text>
           </View>
         )
   }
@@ -147,5 +151,9 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 20,
     padding: 10
+  },
+  typeText: {
+    fontWeight: 'bold',
+    fontFamily: 'roboto'
   }
 })
