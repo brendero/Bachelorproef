@@ -123,7 +123,7 @@ export default class ReportModal extends Component {
               style={styles.closeBtn}
               onPress={() => this.setModalVisible(!modalVisible)}
             >
-              <Text>Close</Text>
+              <Text style={{fontFamily: 'roboto'}}>Close</Text>
             </TouchableOpacity>
           </View>
         </Modal>
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   reportText: {
+    fontSize: width/31,
     marginTop: 10,
     fontFamily: 'roboto'
   }
