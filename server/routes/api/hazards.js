@@ -15,7 +15,7 @@ router.get('/search',(req, res) => {
       },
       $maxDistance: 100
     }
-  }})
+  }, isDeleted: false})
   .then(hazards => {
     if(hazards) {
       res.json(hazards)
@@ -46,8 +46,10 @@ router.post('/report/:id', (req, res) => {
   Hazard.findById(req.params.id)
     .then(hazard => {
       if(hazard) {
-        if(hazard.score - 1 === 0) {
-          hazard.remove().then(() => res.json({success: true}))
+        if((hazard.score - 1) == 0) {
+          Hazard.findByIdAndUpdate(hazard.id, {isDeleted: true}, {new: true})
+            .then(() => res.json({success: true}))
+            .catch(err => res.status(404).json({success: false}))
         }
         else {
           Hazard.findByIdAndUpdate(hazard.id, {score: (hazard.score -1)}, {new: true})

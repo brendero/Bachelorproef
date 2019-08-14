@@ -27,6 +27,11 @@ const HazardSchema = new Schema({
     type: Date,
     required: true,
     default: Date.now()
+  },
+  isDeleted: {
+    type: Boolean,
+    required: true,
+    default: false
   }
 })
 
