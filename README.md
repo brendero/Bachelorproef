@@ -1,3 +1,5 @@
+> :warning: **Project needs a working Google Directions Api**: google directions APi is a paying service and is used in this application
+
 # SafeLane
 > Community driven react-native application made to improve the safety of cyclists
 

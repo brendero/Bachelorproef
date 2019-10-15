@@ -116,11 +116,11 @@ export default class CustomCallout extends Component {
         <View style={{flexDirection: 'column', justifyContent: 'space-between'}}>
           <TouchableOpacity style={styles.reportBtn} onPress={this.supportHazard}>
             <FontAwesome name="thumbs-up" style={{color: "#4C64BE", padding: 5}}/>
-            <Text>Correct information</Text>
+            <Text style={styles.buttonText}>Correct information</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.reportBtn} onPress={this.reportHazard}>
             <FontAwesome name="thumbs-down" style={{color: "#BE2525", padding: 5}}/>
-            <Text>Incorrect information</Text> 
+            <Text style={styles.buttonText}>Incorrect information</Text> 
           </TouchableOpacity>
         </View>
         </View>
@@ -153,7 +153,10 @@ const styles = StyleSheet.create({
     padding: 10
   },
   typeText: {
-    fontWeight: 'bold',
+    fontFamily: 'roboto',
+    fontWeight: 'bold'
+  },
+  buttonText: {
     fontFamily: 'roboto'
   }
 })

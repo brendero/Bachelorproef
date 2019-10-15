@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontWeight: "bold",
-    fontSize: 20,
-    fontFamily: 'roboto'
+    fontFamily: 'roboto',
+    fontSize: 20
   },
   distanceText: {
     color: 'lightgrey',

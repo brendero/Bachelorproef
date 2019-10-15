@@ -26,6 +26,10 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": "Community driven react-native application to improve the safety of bikers."
+    "android": {
+      "package": "com.brendero.safelane"
+    },
+    "description": "Community driven react-native application to improve the safety of bikers.",
+    "githubUrl": "https://github.com/brendero/Bachelorproef"
   }
 }
