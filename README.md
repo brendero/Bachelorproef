@@ -7,6 +7,9 @@
 
 This project was created as a bachelor thesis for Artevelde University College in Ghent. 
 
+## Screencast
+[![Screencast Safelane](https://i.ytimg.com/vi/frPNO9WE754/hqdefault.jpg?sqp=-oaymwEZCNACELwBSFXyq4qpAwsIARUAAIhCGAFwAQ==&rs=AOn4CLCoACMpp5xeQDJKhok--pi6xacaDw)](https://www.youtube.com/watch?v=frPNO9WE754)
+
 ## Demo
 This app was hosted on expo. you can try it on your android device by scanning the qr code below or you can [open it directly on expo](https://expo.io/@brendero/safelane)
 
